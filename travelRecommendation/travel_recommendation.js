@@ -3,7 +3,9 @@ const search = document.getElementById("search_field");
 const search_btn = document.getElementById("search_btn");
 const clear_btn = document.getElementById("clear_btn");
 const results_field = document.getElementById("rec_results");
-const CLK = "click";
+const CLK = "click";const BEA = ["beach", "beaches"];
+const TEM = ["temple", "temples"];
+const COU = ["japan", "brazil", "australia"];
 const team_arr = [
 	{img: "blank-avatar.png", name: "Joe Doe", role: "CEO"},
 	{img: "blank-avatar.png", name: "Merry Poppins", role: "CMO"},
@@ -16,18 +18,39 @@ if(search_btn) {
 }
 
 async function performSearch() {
-	console.log("performSearch");
-	const search_text = search.value;
-	const res = await fetch("travel_recommendation_api.json")
+	const search_text = search.value.toLowerCase();
+    let res_arr = [];
+	let res = await fetch("travel_recommendation_api.json")
 		.then(resp => resp.json())
 		.then(data => {
-			console.log(data);
-		});
-			
+            if(search_text === "")
+                return;
+
+            if(BEA.includes(search_text))
+                res_arr = data.beaches;
+            
+            if(COU.includes(search_text))
+                res_arr = data.countries.filter(cou => cou.name.toLowerCase() === search_text).cities;
+
+            if(TEM.includes(search_text))
+                res_arr = data.temples;
+            
+            return res_arr.map(item => `
+                <div class="res_item">
+                    <img src="${item.imageUrl}">
+                    <h4>${item.name}</h4>
+                    <p>${item.description}</p>
+                </div>
+            `);	
+        })
+        .catch(err => console.log(err));
+
+        results_field.innerHTML = res.join();
 }
 
 function resetResults() {
 	console.log("!!!");
+    search.value = "";
 	results_field.innerHTML = "";
 }
 
