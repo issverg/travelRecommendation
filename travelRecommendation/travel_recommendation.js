@@ -1,9 +1,35 @@
 const team_wrapper = document.getElementById("team_wrapper");
+const search = document.getElementById("search_field");
+const search_btn = document.getElementById("search_btn");
+const clear_btn = document.getElementById("clear_btn");
+const results_field = document.getElementById("rec_results");
+const CLK = "click";
 const team_arr = [
 	{img: "blank-avatar.png", name: "Joe Doe", role: "CEO"},
 	{img: "blank-avatar.png", name: "Merry Poppins", role: "CMO"},
 	{img: "blank-avatar.png", name: "Jason Statham", role: "CTO"},
 ];
+
+if(search_btn) {
+	search_btn.addEventListener(CLK, performSearch);
+	clear_btn.addEventListener(CLK, resetResults);
+}
+
+async function performSearch() {
+	console.log("performSearch");
+	const search_text = search.value;
+	const res = await fetch("travel_recommendation_api.json")
+		.then(resp => resp.json())
+		.then(data => {
+			console.log(data);
+		});
+			
+}
+
+function resetResults() {
+	console.log("!!!");
+	results_field.innerHTML = "";
+}
 
 (function fillTeamMembers() {
 	let team_arr_mapped = team_arr.map(member => 
@@ -18,5 +44,7 @@ const team_arr = [
 		</div>
 		`
 	);
-	team_wrapper.innerHTML = team_arr_mapped.join("");
+	
+	if(team_wrapper)
+		team_wrapper.innerHTML = team_arr_mapped.join("");
 })();
