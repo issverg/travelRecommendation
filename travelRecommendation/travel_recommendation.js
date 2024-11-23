@@ -29,8 +29,10 @@ async function performSearch() {
             if(BEA.includes(search_text))
                 res_arr = data.beaches;
             
-            if(COU.includes(search_text))
-                res_arr = data.countries.filter(cou => cou.name.toLowerCase() === search_text).cities;
+            if(COU.includes(search_text)) {
+                res_arr = data.countries.filter(cou => cou.name.toLowerCase() === search_text);
+                res_arr = res_arr[0].cities;
+            }
 
             if(TEM.includes(search_text))
                 res_arr = data.temples;
@@ -45,7 +47,7 @@ async function performSearch() {
         })
         .catch(err => console.log(err));
 
-        results_field.innerHTML = res.join();
+        results_field.innerHTML = res.join("");
 }
 
 function resetResults() {
